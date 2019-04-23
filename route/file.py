@@ -29,7 +29,7 @@ def file():
 
 # 返回文件目录
 @app.route('/GetFile', methods=['POST'])
-@cklogin()
+# @cklogin()
 def GetFile():
     try:
         path = b64decode_(request.form['path'])
@@ -84,7 +84,7 @@ def GetFile():
 
 # 下载
 @app.route('/DownFile', methods=['GET', 'POST'])
-@cklogin()
+# @cklogin()
 def DownFile():
     fileName = request.values.get('filename')
     fileName = b64decode_(fileName)
@@ -112,7 +112,7 @@ def codeEdit():
     filename = b64decode_(request.form['path'])
     if os.path.getsize(filename) > 2097152: return json.dumps({'resultCode': 1, 'fileCode': '不能在线编辑大于2MB的文件！'});
     with open(filename, 'rb') as f:
-        # 文件编码,fuck you
+        # 文件编码
         srcBody = f.read()
         char = chardet.detect(srcBody)
         fileCoding = char['encoding']
@@ -149,9 +149,10 @@ def saveEditCode():
 
 # 删除
 @app.route('/Delete', methods=['POST'])
-@cklogin()
+# @cklogin()
 def Delete():
     fileName = b64decode_(request.values.get('filename'))
+    print(request.values.get('filename'),fileName)
     result = delete_(fileName)
     if result[0]:
         return json.dumps({'resultCode': 0, 'result': 'success'})
@@ -194,7 +195,7 @@ def RenameFile():
 
 # 创建目录
 @app.route('/CreateDir', methods=['POST'])
-@cklogin()
+# @cklogin()
 def CreateDir():
     try:
         dirName = b64decode_(request.values.get('dirName'))
@@ -281,11 +282,30 @@ def picVisit():
     return imgBase64
 
 
+# 查询文件是否纯在
+@app.route('/CheckFile', methods=['POST'])
+@cklogin()
+def CheckFile():
+    ret = {'resultCode': 0, 'result': None}
+    try:
+        fileName = b64decode_(request.values.get('fileName'))
+        path = b64decode_(request.values.get('path'))
+        if os.path.exists(os.path.join(path, fileName)):
+            ret['result'] = True
+        else:
+            ret['result'] = False
+    except Exception as e:
+        return json.dumps({'resultCode': 1, 'result': str(e)})
+    else:
+        return json.dumps(ret)
+
+
 # 上传文件
 @app.route('/UploadFile', methods=['POST'])
 @cklogin()
 def UploadFile():
     try:
+
         nowPath = b64decode_(request.values.get('nowPath'))
         UploadFileContent = request.files['File']
         UploadFileName = UploadFileContent.filename
@@ -345,6 +365,7 @@ def delete_(fileName):
 
 def zip_(fileList, zipPath):
     try:
+
         if len(fileList) > 1:
             zipName = os.path.split(zipPath)[1]
         else:
