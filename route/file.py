@@ -209,7 +209,24 @@ def CreateDir():
     else:
         return json.dumps({'resultCode': 0, 'result': 'success'})
 
+# 创建目录群
+@app.route('/CreateDirs', methods=['POST'])
+# @cklogin()
+def CreateDirs():
+    try:
+        dirPath = b64decode_(request.values.get('dirPath'))
+        path = b64decode_(request.values.get('path'))
+        print(os.path.join(path, dirPath))
+        if os.path.exists(os.path.join(path, dirPath)):
+            return json.dumps({'resultCode': 1, 'result': '目录已存在'})
+        else:
+            os.makedirs(os.path.join(path, dirPath))
+    except Exception as e:
+        return json.dumps({'resultCode': 1, 'result': str(e)})
+    else:
+        return json.dumps({'resultCode': 0, 'result': 'success'})
 
+    
 # 创建文件
 @app.route('/CreateFile', methods=['POST'])
 @cklogin()
