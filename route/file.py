@@ -175,7 +175,7 @@ def chmod():
 
 # 重命名
 @app.route('/RenameFile', methods=['POST'])
-@cklogin()
+# @cklogin()
 def RenameFile():
     try:
         newFileName = b64decode_(request.values.get('newFileName'))
