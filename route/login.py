@@ -40,7 +40,7 @@ def login():
 
 
 # 登出
-@app.route("/loginout", methods=["GET"])
+@app.route("/logout", methods=["GET"])
 def loginout():
     session['password'] = None
     session['username'] = None
