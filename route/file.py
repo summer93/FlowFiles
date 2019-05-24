@@ -300,7 +300,7 @@ def picVisit():
 
 # 查询文件是否纯在
 @app.route('/CheckFile', methods=['POST'])
-@cklogin()
+# @cklogin()
 def CheckFile():
     ret = {'resultCode': 0, 'result': None}
     try:
