@@ -32,7 +32,7 @@ def login():
             session['password'] = request.form['password']
             session['username'] = request.form['username']
             session['secectList'] = '[]'
-            return redirect('/')
+            return redirect('/file')
         else:
             return render_template('login.html', text='账号或密码错误!')
     else:

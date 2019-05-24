@@ -93,7 +93,7 @@ def DownFile():
         if result[0]:
             fileName = result[1]
         else:
-            return json.dumps({'resultCode': 1, 'fileCode': str(e)})
+            return json.dumps({'resultCode': 1, 'fileCode': result[1]})
     response = make_response(
         send_from_directory(os.path.split(fileName)[0], os.path.split(fileName)[1], as_attachment=True))
     response.headers["Content-Disposition"] = "attachment; filename={}".format(fileName.encode().decode('latin-1'))
@@ -152,7 +152,6 @@ def saveEditCode():
 # @cklogin()
 def Delete():
     fileName = b64decode_(request.values.get('filename'))
-    print(request.values.get('filename'),fileName)
     result = delete_(fileName)
     if result[0]:
         return json.dumps({'resultCode': 0, 'result': 'success'})
@@ -209,6 +208,7 @@ def CreateDir():
     else:
         return json.dumps({'resultCode': 0, 'result': 'success'})
 
+
 # 创建目录群
 @app.route('/CreateDirs', methods=['POST'])
 # @cklogin()
@@ -216,7 +216,6 @@ def CreateDirs():
     try:
         dirPath = b64decode_(request.values.get('dirPath'))
         path = b64decode_(request.values.get('path'))
-        print(os.path.join(path, dirPath))
         if os.path.exists(os.path.join(path, dirPath)):
             return json.dumps({'resultCode': 1, 'result': '目录已存在'})
         else:
@@ -226,7 +225,7 @@ def CreateDirs():
     else:
         return json.dumps({'resultCode': 0, 'result': 'success'})
 
-    
+
 # 创建文件
 @app.route('/CreateFile', methods=['POST'])
 @cklogin()
