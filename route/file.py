@@ -318,7 +318,7 @@ def CheckFile():
 
 # 上传文件
 @app.route('/UploadFile', methods=['POST'])
-@cklogin()
+# @cklogin()
 def UploadFile():
     try:
 
